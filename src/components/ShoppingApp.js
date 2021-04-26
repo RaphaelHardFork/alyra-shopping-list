@@ -1,11 +1,11 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import ShoppingList from './ShoppingList'
 import AddProductForm from './AddProductForm'
 import AddPopularProducts from './AddPopularProduct'
 
 
 const ShoppingApp = () => {
-  const [shopping, setShopping] = useState([])
+  const [shopping, setShopping] = useState(() => JSON.parse(window.localStorage.getItem("my-shopping-list")) || [])
 
   const addToShoppingList = (product) => {
     setShopping([...shopping, product])
@@ -13,6 +13,16 @@ const ShoppingApp = () => {
   const removeFromShoppingList = (product) => {
     setShopping(shopping.filter((elem) => elem !== product))
   }
+
+  // Les UseEffect
+  useEffect(() => {
+    document.title = shopping.length ? `${shopping.length} produits à acheter` : "Préparer votre liste"
+  }, [shopping])
+
+  useEffect(() => {
+    window.localStorage.setItem("my-shopping-list", JSON.stringify(shopping))
+  }, [shopping])
+
 
   return <main className="row">
     <section className="col-lg-8">
